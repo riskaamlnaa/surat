@@ -376,12 +376,9 @@ $flash  = getFlash();
         <a href="index.php" class="nav-item active"><span class="icon"><i class="fas fa-home"></i></span> Dashboard</a>
         <a href="tambah.php" class="nav-item"><span class="icon"><i class="fas fa-plus-circle"></i></span> Tambah Surat</a>
         
+        <!-- BIDANG DIPBATASI MENJADI SALAH SATU SAJA -->
         <div class="nav-label">BIDANG</div>
         <a href="index.php?bidang=Perlindungan%20Khusus%20Anak" class="nav-item"><span class="icon"><i class="fas fa-shield-alt"></i></span> Perlindungan Khusus Anak</a>
-        <a href="index.php?bidang=Perlindungan%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-female"></i></span> Perlindungan Perempuan</a>
-        <a href="index.php?bidang=Pemenuhan%20Hak%20Anak" class="nav-item"><span class="icon"><i class="fas fa-child"></i></span> Pemenuhan Hak Anak</a>
-        <a href="index.php?bidang=Kualitas%20Hidup%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-venus"></i></span> Kualitas Hidup Perempuan</a>
-        <a href="index.php?bidang=Sekretariat" class="nav-item"><span class="icon"><i class="fas fa-building"></i></span> Sekretariat</a>
         
         <div class="nav-label">LAPORAN</div>
         <a href="statistik.php" class="nav-item"><span class="icon"><i class="fas fa-chart-bar"></i></span> Statistik</a>
@@ -395,7 +392,7 @@ $flash  = getFlash();
             <button class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
             <div class="page-title">
                 <h1>Manajemen Surat</h1>
-                <p>Sistem pengelolaan surat masuk & keluar DP3A</p>
+                <p>Sistem pengelolaan surat masuk & keluar DP3A Bidang Perlindungan Khusus Anak</p>
             </div>
         </div>
         <div class="search-box">
@@ -455,14 +452,13 @@ $flash  = getFlash();
                         <option value="masuk" <?= $filter_jenis==='masuk'?'selected':'' ?>>Surat Masuk</option>
                         <option value="keluar" <?= $filter_jenis==='keluar'?'selected':'' ?>>Surat Keluar</option>
                     </select>
+                    
+                    <!-- PERUBAHAN: Dropdown Bidang hanya 1 opsi -->
                     <select name="bidang">
                         <option value="">Semua Bidang</option>
                         <option value="Perlindungan Khusus Anak" <?= $filter_bidang==='Perlindungan Khusus Anak'?'selected':'' ?>>Perlindungan Khusus Anak</option>
-                        <option value="Perlindungan Perempuan" <?= $filter_bidang==='Perlindungan Perempuan'?'selected':'' ?>>Perlindungan Perempuan</option>
-                        <option value="Pemenuhan Hak Anak" <?= $filter_bidang==='Pemenuhan Hak Anak'?'selected':'' ?>>Pemenuhan Hak Anak</option>
-                        <option value="Kualitas Hidup Perempuan" <?= $filter_bidang==='Kualitas Hidup Perempuan'?'selected':'' ?>>Kualitas Hidup Perempuan</option>
-                        <option value="Sekretariat" <?= $filter_bidang==='Sekretariat'?'selected':'' ?>>Sekretariat</option>
                     </select>
+                    
                     <select name="status">
                         <option value="">Semua Status</option>
                         <option value="diterima" <?= $filter_status==='diterima'?'selected':'' ?>>Diterima</option>

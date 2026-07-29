@@ -13,20 +13,14 @@ if ($result->num_rows === 0) {
 
 $surat = $result->fetch_assoc();
 
-$kop_default = [
-    'pemda' => 'PEMERINTAH KABUPATEN/KOTA',
+// === DATA KOP SURAT RESMI DP3A KOTA BANJARMASIN ===
+$kop = [
+    'pemda' => 'PEMERINTAH KOTA BANJARMASIN',
     'dinas' => 'DINAS PEMBERDAYAAN PEREMPUAN DAN PERLINDUNGAN ANAK',
-    'alamat' => 'Jl. Contoh Alamat No. 123, Kota/Kabupaten',
-    'telp' => '(021) 1234567',
-    'email' => 'dp3a@pemerintah.go.id'
+    'alamat' => 'Gedung Capil, Jl. Sultan Adam No.49, Surgi Mufti, Kec. Banjarmasin Utara, Kota Banjarmasin, Kalimantan Selatan 70122',
+    'telp' => '(0511) 4321022',
+    'email' => 'dp3a@banjarmasinkota.go.id'
 ];
-
-if(file_exists('config_kop.json')) {
-    $kop_data = json_decode(file_get_contents('config_kop.json'), true);
-    $kop = array_merge($kop_default, $kop_data);
-} else {
-    $kop = $kop_default;
-}
 
 $bulan_id = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
 $tgl_kirim = date('d', strtotime($surat['tanggal_kirim'])) . ' ' . $bulan_id[date('m', strtotime($surat['tanggal_kirim'])) - 1] . ' ' . date('Y', strtotime($surat['tanggal_kirim']));
@@ -68,7 +62,7 @@ $tgl_terima = date('d', strtotime($surat['tanggal_terima'])) . ' ' . $bulan_id[d
             min-height: 100vh;
         }
 
-        /* SIDEBAR (untuk konsistensi - opsional jika ingin ditambah sidebar) */
+        /* SIDEBAR */
         .sidebar {
             position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
             background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -80,16 +74,30 @@ $tgl_terima = date('d', strtotime($surat['tanggal_terima'])) . ' ' . $bulan_id[d
             border-bottom: 1px solid rgba(255,255,255,0.08);
             background: rgba(0,0,0,0.15);
         }
+        
+        /* LOGO BULAT SEMPURNA */
         .sidebar-logo {
-            width: 72px; height: 72px; background: white; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            padding: 8px; flex-shrink: 0; overflow: hidden;
+            width: 72px; 
+            height: 72px;
+            background: white;
+            border-radius: 50%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            margin: 0 auto 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            padding: 8px;
+            flex-shrink: 0;
+            overflow: hidden;
             border: 2px solid rgba(255,255,255,0.1);
         }
         .sidebar-logo img {
-            width: 100%; height: 100%; object-fit: contain; border-radius: 50%;
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain;
+            border-radius: 50%;
         }
+        
         .sidebar-header h2 { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 4px; }
         .sidebar-header p { font-size: 12px; opacity: 0.85; line-height: 1.4; }
         .sidebar-nav { flex: 1; overflow-y: auto; padding: 20px 0; }
@@ -322,10 +330,6 @@ $tgl_terima = date('d', strtotime($surat['tanggal_terima'])) . ' ' . $bulan_id[d
             <a href="tambah.php" class="nav-item"><span class="icon"><i class="fas fa-plus-circle"></i></span> Tambah Surat</a>
             <div class="nav-label">BIDANG</div>
             <a href="index.php?bidang=Perlindungan%20Khusus%20Anak" class="nav-item"><span class="icon"><i class="fas fa-shield-alt"></i></span> Perlindungan Khusus Anak</a>
-            <a href="index.php?bidang=Perlindungan%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-female"></i></span> Perlindungan Perempuan</a>
-            <a href="index.php?bidang=Pemenuhan%20Hak%20Anak" class="nav-item"><span class="icon"><i class="fas fa-child"></i></span> Pemenuhan Hak Anak</a>
-            <a href="index.php?bidang=Kualitas%20Hidup%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-venus"></i></span> Kualitas Hidup Perempuan</a>
-            <a href="index.php?bidang=Sekretariat" class="nav-item"><span class="icon"><i class="fas fa-building"></i></span> Sekretariat</a>
             <div class="nav-label">LAPORAN</div>
             <a href="statistik.php" class="nav-item"><span class="icon"><i class="fas fa-chart-bar"></i></span> Statistik</a>
             <a href="arsip.php" class="nav-item"><span class="icon"><i class="fas fa-archive"></i></span> Arsip Surat</a>

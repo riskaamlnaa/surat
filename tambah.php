@@ -320,9 +320,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .file-upload-zone p {
             font-size: 13px; color: var(--text-muted);
         }
-        .file-upload-zone input[type="file"] {
-            display: none;
-        }
+        /* FIX: Hapus style display:none karena kita taruh input diluar zona ini */
+        
         .file-preview {
             margin-top: 16px;
             padding: 16px;
@@ -450,12 +449,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="nav-label">MENU UTAMA</div>
             <a href="index.php" class="nav-item"><span class="icon"><i class="fas fa-home"></i></span> Dashboard</a>
             <a href="tambah.php" class="nav-item active"><span class="icon"><i class="fas fa-plus-circle"></i></span> Tambah Surat</a>
+            <!-- BIDANG DIPBATASI MENJADI SALAH SATU SAJA -->
             <div class="nav-label">BIDANG</div>
             <a href="index.php?bidang=Perlindungan%20Khusus%20Anak" class="nav-item"><span class="icon"><i class="fas fa-shield-alt"></i></span> Perlindungan Khusus Anak</a>
-            <a href="index.php?bidang=Perlindungan%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-female"></i></span> Perlindungan Perempuan</a>
-            <a href="index.php?bidang=Pemenuhan%20Hak%20Anak" class="nav-item"><span class="icon"><i class="fas fa-child"></i></span> Pemenuhan Hak Anak</a>
-            <a href="index.php?bidang=Kualitas%20Hidup%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-venus"></i></span> Kualitas Hidup Perempuan</a>
-            <a href="index.php?bidang=Sekretariat" class="nav-item"><span class="icon"><i class="fas fa-building"></i></span> Sekretariat</a>
             <div class="nav-label">LAPORAN</div>
             <a href="statistik.php" class="nav-item"><span class="icon"><i class="fas fa-chart-bar"></i></span> Statistik</a>
             <a href="arsip.php" class="nav-item"><span class="icon"><i class="fas fa-archive"></i></span> Arsip Surat</a>
@@ -510,16 +506,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
                         
+                        <!-- PERUBAHAN: Opsi Bidang Dipisah menjadi Satu saja -->
                         <div class="form-group">
                             <label><i class="fas fa-building"></i> Bidang <span class="required">*</span></label>
                             <div class="input-wrapper">
                                 <select name="bidang" class="form-control" required>
                                     <option value="">Pilih Bidang</option>
                                     <option value="Perlindungan Khusus Anak">Perlindungan Khusus Anak</option>
-                                    <option value="Perlindungan Perempuan">Perlindungan Perempuan</option>
-                                    <option value="Pemenuhan Hak Anak">Pemenuhan Hak Anak</option>
-                                    <option value="Kualitas Hidup Perempuan">Kualitas Hidup Perempuan</option>
-                                    <option value="Sekretariat">Sekretariat</option>
                                 </select>
                                 <i class="fas fa-chevron-down input-icon" style="left: auto; right: 14px;"></i>
                             </div>
@@ -584,12 +577,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label style="display:block; font-size:13px; font-weight:600; margin-bottom:8px;">
                             <i class="fas fa-paperclip" style="color:var(--secondary);"></i> Upload File Surat
                         </label>
+                        
+                        <!-- INPUT DILETAKKAN DI LUAR KOTAK AGAR TIDAK HILANG SAAT DI-OVERWRITE JS -->
+                        <input type="file" name="file_surat" id="file_surat" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFileSelect(this)" style="display:none;">
+                        
                         <div class="file-upload-zone" id="fileUploadZone" onclick="document.getElementById('file_surat').click()">
                             <i class="fas fa-cloud-upload-alt"></i>
                             <h3>Klik untuk upload file</h3>
                             <p>PDF/PNG/JPG - Maksimal 5MB</p>
-                            <input type="file" name="file_surat" id="file_surat" accept=".pdf,.png,.jpg,.jpeg" onchange="handleFileSelect(this)">
                         </div>
+                        
                         <div class="file-preview" id="filePreview">
                             <i class="fas fa-check-circle"></i>
                             <div class="file-name" id="fileName"></div>
@@ -632,20 +629,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             fileName.textContent = file.name;
             fileSize.textContent = (file.size / 1024).toFixed(2) + ' KB';
             
-            // Visual feedback
-            zone.innerHTML = `
-                <i class="fas fa-check" style="color:var(--success);font-size:64px;"></i>
-                <h3>File berhasil dipilih</h3>
-                <p>${file.name}</p>
-            `;
-        } else {
-            zone.classList.remove('active');
-            preview.classList.remove('show');
-            zone.innerHTML = `
-                <i class="fas fa-cloud-upload-alt"></i>
-                <h3>Klik untuk upload file</h3>
-                <p>PDF/PNG/JPG - Maksimal 5MB</p>
-            `;
+            // Ubah tampilan text saja tanpa menghapus elemen
+            zone.querySelector('h3').textContent = "File dipilih: " + file.name;
+            zone.querySelector('i').className = "fas fa-check";
+            zone.querySelector('i').style.color = "var(--success)";
+            zone.querySelector('p').style.display = "none";
         }
     }
     

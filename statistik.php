@@ -2,7 +2,25 @@
 session_start();
 require_once 'config.php';
 
-// Statistik per Bidang
+// === STATISTIK DATA ===
+
+// 1. Total Keseluruhan
+$total_surat = $conn->query("SELECT COUNT(*) as c FROM surat")->fetch_assoc()['c'];
+
+// 2. Surat Masuk
+$total_masuk = $conn->query("SELECT COUNT(*) as c FROM surat WHERE jenis_surat='masuk'")->fetch_assoc()['c'];
+
+// 3. Surat Keluar
+$total_keluar = $conn->query("SELECT COUNT(*) as c FROM surat WHERE jenis_surat='keluar'")->fetch_assoc()['c'];
+
+// 4. Surat Bulan Ini
+$surat_bulan_ini = $conn->query("
+    SELECT COUNT(*) as c FROM surat 
+    WHERE MONTH(tanggal_kirim) = MONTH(CURRENT_DATE()) 
+    AND YEAR(tanggal_kirim) = YEAR(CURRENT_DATE())
+")->fetch_assoc()['c'];
+
+// 5. Statistik per Bidang (Untuk Progress Bar)
 $stats_bidang = $conn->query("
     SELECT bidang, COUNT(*) as total 
     FROM surat 
@@ -10,7 +28,7 @@ $stats_bidang = $conn->query("
     ORDER BY total DESC
 ")->fetch_all(MYSQLI_ASSOC);
 
-// Statistik per Bulan
+// 6. Statistik per Bulan (Untuk Chart Bar - 6 Bulan Terakhir)
 $stats_bulan = $conn->query("
     SELECT 
         DATE_FORMAT(tanggal_kirim, '%Y-%m') as bulan_code,
@@ -22,35 +40,19 @@ $stats_bulan = $conn->query("
     LIMIT 6
 ")->fetch_all(MYSQLI_ASSOC);
 
-// Statistik Status
+// 7. Statistik Status (Untuk List)
 $stats_status = $conn->query("
     SELECT status, COUNT(*) as total 
     FROM surat 
     GROUP BY status
 ")->fetch_all(MYSQLI_ASSOC);
 
-// Statistik Jenis Surat
+// 8. Statistik Jenis Surat (Untuk Doughnut Chart)
 $stats_jenis = $conn->query("
     SELECT jenis_surat, COUNT(*) as total 
     FROM surat 
     GROUP BY jenis_surat
 ")->fetch_all(MYSQLI_ASSOC);
-
-// Total Keseluruhan
-$total_surat = $conn->query("SELECT COUNT(*) as c FROM surat")->fetch_assoc()['c'];
-$total_masuk = $conn->query("SELECT COUNT(*) as c FROM surat WHERE jenis_surat='masuk'")->fetch_assoc()['c'];
-$total_keluar = $conn->query("SELECT COUNT(*) as c FROM surat WHERE jenis_surat='keluar'")->fetch_assoc()['c'];
-$total_selesai = $conn->query("SELECT COUNT(*) as c FROM surat WHERE status='selesai'")->fetch_assoc()['c'];
-
-// Surat bulan ini
-$surat_bulan_ini = $conn->query("
-    SELECT COUNT(*) as c FROM surat 
-    WHERE MONTH(tanggal_kirim) = MONTH(CURRENT_DATE()) 
-    AND YEAR(tanggal_kirim) = YEAR(CURRENT_DATE())
-")->fetch_assoc()['c'];
-
-// Rata-rata per bulan
-$rata_rata = count($stats_bulan) > 0 ? round(array_sum(array_column($stats_bulan, 'total')) / count($stats_bulan)) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -156,6 +158,7 @@ $rata_rata = count($stats_bulan) > 0 ? round(array_sum(array_column($stats_bulan
 
         .main-content { margin-left: 280px; padding: 32px; min-height: 100vh; }
         
+        /* HEADER HALAMAN */
         .page-header { 
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); 
             color: white;
@@ -198,7 +201,7 @@ $rata_rata = count($stats_bulan) > 0 ? round(array_sum(array_column($stats_bulan
             border-color: var(--primary);
         }
 
-        /* Summary Cards */
+        /* SUMMARY CARDS */
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -272,7 +275,7 @@ $rata_rata = count($stats_bulan) > 0 ? round(array_sum(array_column($stats_bulan
             gap: 4px;
         }
 
-        /* Stats Grid */
+        /* STATS GRID */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
@@ -415,12 +418,11 @@ $rata_rata = count($stats_bulan) > 0 ? round(array_sum(array_column($stats_bulan
         <div class="nav-label">MENU UTAMA</div>
         <a href="index.php" class="nav-item"><span class="icon"><i class="fas fa-home"></i></span> Dashboard</a>
         <a href="tambah.php" class="nav-item"><span class="icon"><i class="fas fa-plus-circle"></i></span> Tambah Surat</a>
+        
+        <!-- BIDANG DIPBATASI MENJADI SALAH SATU SAJA -->
         <div class="nav-label">BIDANG</div>
         <a href="index.php?bidang=Perlindungan%20Khusus%20Anak" class="nav-item"><span class="icon"><i class="fas fa-shield-alt"></i></span> Perlindungan Khusus Anak</a>
-        <a href="index.php?bidang=Perlindungan%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-female"></i></span> Perlindungan Perempuan</a>
-        <a href="index.php?bidang=Pemenuhan%20Hak%20Anak" class="nav-item"><span class="icon"><i class="fas fa-child"></i></span> Pemenuhan Hak Anak</a>
-        <a href="index.php?bidang=Kualitas%20Hidup%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-venus"></i></span> Kualitas Hidup Perempuan</a>
-        <a href="index.php?bidang=Sekretariat" class="nav-item"><span class="icon"><i class="fas fa-building"></i></span> Sekretariat</a>
+        
         <div class="nav-label">LAPORAN</div>
         <a href="statistik.php" class="nav-item active"><span class="icon"><i class="fas fa-chart-bar"></i></span> Statistik</a>
         <a href="arsip.php" class="nav-item"><span class="icon"><i class="fas fa-archive"></i></span> Arsip Surat</a>
@@ -432,7 +434,7 @@ $rata_rata = count($stats_bulan) > 0 ? round(array_sum(array_column($stats_bulan
     
     <div class="page-header">
         <h1><i class="fas fa-chart-line"></i> Statistik & Laporan Surat</h1>
-        <p>Laporan rekapitulasi surat masuk dan keluar DP3A</p>
+        <p>Laporan rekapitulasi surat masuk dan keluar Bidang Perlindungan Khusus Anak</p>
     </div>
 
     <!-- Summary Cards -->

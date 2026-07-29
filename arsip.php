@@ -408,12 +408,11 @@ $years_result = $conn->query($years_query);
         <div class="nav-label">MENU UTAMA</div>
         <a href="index.php" class="nav-item"><span class="icon"><i class="fas fa-home"></i></span> Dashboard</a>
         <a href="tambah.php" class="nav-item"><span class="icon"><i class="fas fa-plus-circle"></i></span> Tambah Surat</a>
+        
+        <!-- BIDANG DIPBATASI MENJADI SALAH SATU SAJA -->
         <div class="nav-label">BIDANG</div>
         <a href="index.php?bidang=Perlindungan%20Khusus%20Anak" class="nav-item"><span class="icon"><i class="fas fa-shield-alt"></i></span> Perlindungan Khusus Anak</a>
-        <a href="index.php?bidang=Perlindungan%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-female"></i></span> Perlindungan Perempuan</a>
-        <a href="index.php?bidang=Pemenuhan%20Hak%20Anak" class="nav-item"><span class="icon"><i class="fas fa-child"></i></span> Pemenuhan Hak Anak</a>
-        <a href="index.php?bidang=Kualitas%20Hidup%20Perempuan" class="nav-item"><span class="icon"><i class="fas fa-venus"></i></span> Kualitas Hidup Perempuan</a>
-        <a href="index.php?bidang=Sekretariat" class="nav-item"><span class="icon"><i class="fas fa-building"></i></span> Sekretariat</a>
+        
         <div class="nav-label">LAPORAN</div>
         <a href="statistik.php" class="nav-item"><span class="icon"><i class="fas fa-chart-bar"></i></span> Statistik</a>
         <a href="arsip.php" class="nav-item active"><span class="icon"><i class="fas fa-archive"></i></span> Arsip Surat</a>
@@ -425,7 +424,7 @@ $years_result = $conn->query($years_query);
     
     <div class="page-header">
         <h1><i class="fas fa-archive"></i> Arsip Digital Surat</h1>
-        <p>Daftar seluruh surat masuk dan keluar DP3A</p>
+        <p>Daftar seluruh surat masuk dan keluar bidang perlindungan khusus anak</p>
     </div>
 
     <!-- Statistics -->
@@ -468,29 +467,27 @@ $years_result = $conn->query($years_query);
                     <option value="keluar" <?= $filter_jenis==='keluar'?'selected':'' ?>>Surat Keluar</option>
                 </select>
             </div>
+            <!-- PERUBAHAN: Opsi Bidang Dipisah menjadi Satu saja -->
             <div class="filter-group">
                 <label><i class="fas fa-building"></i> Bidang</label>
                 <select name="bidang">
-                    <option value="">Semua Bidang</option>
                     <option value="Perlindungan Khusus Anak" <?= $filter_bidang==='Perlindungan Khusus Anak'?'selected':'' ?>>Perlindungan Khusus Anak</option>
-                    <option value="Perlindungan Perempuan" <?= $filter_bidang==='Perlindungan Perempuan'?'selected':'' ?>>Perlindungan Perempuan</option>
-                    <option value="Pemenuhan Hak Anak" <?= $filter_bidang==='Pemenuhan Hak Anak'?'selected':'' ?>>Pemenuhan Hak Anak</option>
-                    <option value="Kualitas Hidup Perempuan" <?= $filter_bidang==='Kualitas Hidup Perempuan'?'selected':'' ?>>Kualitas Hidup Perempuan</option>
-                    <option value="Sekretariat" <?= $filter_bidang==='Sekretariat'?'selected':'' ?>>Sekretariat</option>
                 </select>
             </div>
             <div class="filter-group">
-                <label><i class="fas fa-calendar"></i> Tahun</label>
-                <select name="tahun">
-                    <option value="">Semua Tahun</option>
-                    <?php 
-                    $years_result->data_seek(0);
-                    while($year = $years_result->fetch_assoc()): 
-                    ?>
-                    <option value="<?= $year['tahun'] ?>" <?= $filter_tahun==$year['tahun']?'selected':'' ?>><?= $year['tahun'] ?></option>
-                    <?php endwhile; ?>
-                </select>
-            </div>
+    <label><i class="fas fa-calendar"></i> Tahun</label>
+    <select name="tahun">
+        <option value="">Semua Tahun</option>
+        <?php 
+        // Generate tahun dari tahun sekarang sampai 5 tahun ke belakang
+        $tahun_sekarang = date('Y');
+        for($i = 0; $i <= 5; $i++): 
+            $tahun = $tahun_sekarang - $i;
+        ?>
+        <option value="<?= $tahun ?>" <?= $filter_tahun==$tahun?'selected':'' ?>><?= $tahun ?></option>
+        <?php endfor; ?>
+    </select>
+</div>
             <div style="display:flex;gap:8px;">
                 <button type="submit" class="btn btn-primary"><i class="fas fa-filter"></i> Filter</button>
                 <a href="arsip.php" class="btn btn-outline"><i class="fas fa-redo"></i></a>
